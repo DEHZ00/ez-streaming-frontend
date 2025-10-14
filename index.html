@@ -15,47 +15,79 @@
 
 <header>
   <div class="header-left">
-    <img src="https://r2.fivemanage.com/yhlF0A9ZrohxF6sKvC9qv/2023-05-0821_32_55-THEYKEEPGETTINGINMYHOUSE!_AlternateWatch-YouTube-Opera.png" alt="Ez Streaming" class="logo-img">
-    <!-- If you want a custom logo image instead, use:
-    <img src="https://your-logo-url.com/logo.png" alt="Ez Streaming" class="logo-img">
-    -->
+    <h1>🎬 Ez Streaming</h1>
   </div>
   <input type="text" id="searchBar" placeholder="Search movies or shows..." autocomplete="off">
+  <nav class="nav-links">
+    <button id="homeBtn" class="nav-btn active" data-page="home">Home</button>
+    <button id="watchlistBtn" class="nav-btn" data-page="watchlist">My Watchlist</button>
+    <button id="trendingBtn" class="nav-btn" data-page="trending">Trending</button>
+  </nav>
 </header>
 
-<section>
-  <h2>Continue Watching</h2>
-  <div id="continueWatching" class="movie-row">
-    <p class="placeholder">You haven't watched anything yet. Start watching to see it here!</p>
-  </div>
-</section>
+<!-- Home Page -->
+<div id="homePage" class="page active">
+  <section>
+    <h2>Continue Watching</h2>
+    <div id="continueWatching" class="movie-row">
+      <p class="placeholder">You haven't watched anything yet. Start watching to see it here!</p>
+    </div>
+  </section>
 
-<section>
-  <h2>New Releases</h2>
-  <div id="newMovies" class="movie-row"></div>
-</section>
+  <section>
+    <h2>New Releases</h2>
+    <div id="newMovies" class="movie-row"></div>
+  </section>
 
-<section>
-  <h2>Popular Movies</h2>
-  <div id="popularMovies" class="movie-row"></div>
-</section>
+  <section>
+    <h2>Popular Movies</h2>
+    <div id="popularMovies" class="movie-row"></div>
+  </section>
 
-<section>
-  <h2>Top Rated Movies</h2>
-  <div id="topRatedMovies" class="movie-row"></div>
-</section>
+  <section>
+    <h2>Top Rated Movies</h2>
+    <div id="topRatedMovies" class="movie-row"></div>
+  </section>
 
-<section>
-  <h2>Popular TV Shows</h2>
-  <div id="popularTV" class="movie-row"></div>
-</section>
+  <section>
+    <h2>Popular TV Shows</h2>
+    <div id="popularTV" class="movie-row"></div>
+  </section>
 
-<section>
-  <h2>Top Rated TV Shows</h2>
-  <div id="topRatedTV" class="movie-row"></div>
-</section>
+  <section>
+    <h2>Top Rated TV Shows</h2>
+    <div id="topRatedTV" class="movie-row"></div>
+  </section>
+</div>
 
+<!-- Watchlist Page -->
+<div id="watchlistPage" class="page">
+  <section>
+    <h2>My Watchlist</h2>
+    <div id="watchlistContent" class="movie-row">
+      <p class="placeholder">Your watchlist is empty. Add movies or shows to watch later!</p>
+    </div>
+  </section>
+</div>
+
+<!-- Trending Page -->
+<div id="trendingPage" class="page">
+  <section>
+    <h2>Trending This Week</h2>
+    <div id="trendingContent" class="movie-row"></div>
+  </section>
+</div>
+
+<!-- Player -->
 <div id="player"></div>
+
+<!-- Movie Details Modal -->
+<div id="detailsModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <div id="detailsBody"></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
