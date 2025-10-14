@@ -1,5 +1,5 @@
 // ⚙️ CONFIGURATION - UPDATE AFTER DEPLOYING BACKEND
-const BACKEND_URL = "https://ez-streaming-api.vercel.app/"; // Replace with your Vercel URL
+const BACKEND_URL = "https://ez-streaming-api-xyz.vercel.app"; // Replace with your Vercel URL
 // Example: "https://ez-streaming-api-g3k2m9.vercel.app"
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -10,6 +10,7 @@ const loadingSpinner = document.getElementById("loadingSpinner");
 
 // ---- State Management ----
 let historyData = [];
+let watchlistData = [];
 let currentlyPlaying = null;
 let isLoading = false;
 
@@ -17,8 +18,36 @@ function loadHistory() {
   historyData = JSON.parse(localStorage.getItem("history") || "[]");
 }
 
+function loadWatchlist() {
+  watchlistData = JSON.parse(localStorage.getItem("watchlist") || "[]");
+}
+
 function saveHistory() {
   localStorage.setItem("history", JSON.stringify(historyData));
+}
+
+function saveWatchlist() {
+  localStorage.setItem("watchlist", JSON.stringify(watchlistData));
+}
+
+function toggleWatchlist(id, type, movie) {
+  let index = watchlistData.findIndex(m => m.id === id && m.type === type);
+  
+  if (index > -1) {
+    watchlistData.splice(index, 1);
+    showError("Removed from watchlist");
+  } else {
+    watchlistData.push({ 
+      id, 
+      type, 
+      title: movie.title || movie.name,
+      poster_path: movie.poster_path,
+      addedAt: new Date().toISOString()
+    });
+    showError("Added to watchlist ✓");
+  }
+  
+  saveWatchlist();
 }
 
 function showLoading(show = true) {
@@ -66,6 +95,7 @@ function createMovieCard(movie, type = "movie") {
 
   let entry = historyData.find(m => m.id === movie.id && m.type === type);
   let percent = entry && entry.duration ? (entry.progress / entry.duration) * 100 : 0;
+  let inWatchlist = watchlistData.find(m => m.id === movie.id && m.type === type);
 
   const title = movie.title || movie.name || "Unknown";
   
@@ -73,14 +103,28 @@ function createMovieCard(movie, type = "movie") {
     <div class="card-image-wrapper">
       <img src="${IMG_BASE + movie.poster_path}" alt="${title}" loading="lazy">
       ${percent > 0 ? `<div class="progress-bar" style="width:${percent}%"></div>` : ""}
+      <div class="card-overlay">
+        <button class="play-btn">▶ Play</button>
+        <button class="watchlist-btn" data-id="${movie.id}" data-type="${type}" title="Add to watchlist">
+          ${inWatchlist ? "★" : "☆"}
+        </button>
+      </div>
     </div>
     <p>${title}</p>
   `;
 
-  card.onclick = () => {
+  card.querySelector(".play-btn").onclick = (e) => {
+    e.stopPropagation();
     loadPlayer(movie.id, type, title);
     document.querySelectorAll('.movie-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
+  };
+
+  card.querySelector(".watchlist-btn").onclick = (e) => {
+    e.stopPropagation();
+    toggleWatchlist(movie.id, type, movie);
+    const btn = e.target;
+    btn.textContent = watchlistData.find(m => m.id === movie.id && m.type === type) ? "★" : "☆";
   };
 
   return card;
@@ -263,6 +307,7 @@ window.addEventListener("message", function(event) {
 
 // ---- Initial Load ----
 loadHistory();
+loadWatchlist();
 fetchMovies("/movie/now_playing", "newMovies", "movie");
 fetchMovies("/movie/popular", "popularMovies", "movie");
 fetchMovies("/movie/top_rated", "topRatedMovies", "movie");

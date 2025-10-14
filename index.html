@@ -2,20 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ez Streaming</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<div id="loadingSpinner" class="loading-spinner" style="display:none;">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
 <header>
-  <h1>Ez Streaming</h1>
-  <input type="text" id="searchBar" placeholder="Search movies or shows...">
+  <div class="header-left">
+    <img src="https://r2.fivemanage.com/yhlF0A9ZrohxF6sKvC9qv/2023-05-0821_32_55-THEYKEEPGETTINGINMYHOUSE!_AlternateWatch-YouTube-Opera.png" alt="Ez Streaming" class="logo-img">
+    <!-- If you want a custom logo image instead, use:
+    <img src="https://your-logo-url.com/logo.png" alt="Ez Streaming" class="logo-img">
+    -->
+  </div>
+  <input type="text" id="searchBar" placeholder="Search movies or shows..." autocomplete="off">
 </header>
 
 <section>
   <h2>Continue Watching</h2>
   <div id="continueWatching" class="movie-row">
-    <p class="placeholder">You haven’t watched anything yet. Start watching to see it here!</p>
+    <p class="placeholder">You haven't watched anything yet. Start watching to see it here!</p>
   </div>
 </section>
 

@@ -1,43 +1,137 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
   overflow-x: hidden;
 }
 
+/* Loading Spinner */
+.loading-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 4px solid rgba(102, 204, 255, 0.2);
+  border-top: 4px solid #66ccff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #66ccff;
+}
+
+/* Error Message */
+.error-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff6b6b;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
 header {
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(10px);
+  gap: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
 }
 
 header h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
   color: #66ccff;
+  font-weight: bold;
 }
 
 #searchBar {
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  width: 250px;
+  padding: 12px 16px;
+  border-radius: 25px;
+  border: 2px solid #66ccff;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   font-size: 14px;
+  width: 280px;
+  transition: all 0.3s ease;
 }
 
+#searchBar:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(102, 204, 255, 0.5);
+}
+
+#searchBar::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Sections */
 section {
-  padding: 20px;
+  padding: 30px 20px;
 }
 
 h2 {
-  margin-bottom: 10px;
+  margin: 0 0 15px 0;
   color: #66ccff;
+  font-size: 22px;
 }
 
 .movie-row {
@@ -45,20 +139,37 @@ h2 {
   gap: 15px;
   overflow-x: auto;
   padding-bottom: 10px;
+  scroll-behavior: smooth;
 }
 
+.movie-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.movie-row::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.movie-row::-webkit-scrollbar-thumb {
+  background: #66ccff;
+  border-radius: 10px;
+}
+
+/* Movie Card */
 .movie-card {
   min-width: 150px;
   border-radius: 10px;
   overflow: hidden;
   background: #1c1c1c;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .movie-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
+  transform: scale(1.08);
+  box-shadow: 0px 8px 20px rgba(102, 204, 255, 0.3);
 }
 
 .movie-card.selected {
@@ -76,6 +187,57 @@ h2 {
   width: 100%;
   height: auto;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover .card-image-wrapper img {
+  transform: scale(1.1);
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .card-overlay {
+  opacity: 1;
+}
+
+.play-btn, .watchlist-btn {
+  background: #66ccff;
+  color: #0f2027;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.play-btn:hover {
+  background: #4da8cc;
+  transform: scale(1.05);
+}
+
+.watchlist-btn {
+  padding: 10px 15px;
+  font-size: 18px;
+}
+
+.watchlist-btn:hover {
+  background: #ffd700;
 }
 
 .progress-bar {
@@ -89,20 +251,26 @@ h2 {
 
 .movie-card p {
   text-align: center;
-  padding: 8px;
-  font-size: 14px;
+  padding: 10px 8px;
+  font-size: 13px;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .placeholder {
   font-style: italic;
-  opacity: 0.8;
-  padding: 20px;
+  opacity: 0.7;
+  padding: 30px;
+  text-align: center;
 }
 
+/* Player */
 #player {
   padding: 20px;
   min-height: 400px;
@@ -110,20 +278,33 @@ h2 {
 
 .player-wrapper {
   background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
 .player-header {
   padding: 15px 20px;
   background: rgba(0, 0, 0, 0.9);
   border-bottom: 2px solid #66ccff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .player-header h3 {
   margin: 0;
   color: #66ccff;
   font-size: 18px;
+}
+
+.player-type {
+  font-size: 12px;
+  background: #66ccff;
+  color: #0f2027;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
 }
 
 iframe {
@@ -137,7 +318,11 @@ iframe {
 @media (max-width: 768px) {
   header {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+  }
+
+  header h1 {
+    font-size: 20px;
   }
 
   #searchBar {
@@ -150,5 +335,13 @@ iframe {
 
   .movie-card {
     min-width: 120px;
+  }
+
+  section {
+    padding: 20px 15px;
+  }
+
+  h2 {
+    font-size: 18px;
   }
 }
