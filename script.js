@@ -378,30 +378,36 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
   
   if (!data || !data.results) {
     console.warn("No results in response");
-    showError("No results found");
+    playerDiv.innerHTML = "<p class='placeholder'>No results found</p>";
     return;
   }
 
   console.log("Total results:", data.results.length);
   
-  const searchContent = document.getElementById("searchContent");
-  searchContent.innerHTML = "";
+  // Create search results container
+  playerDiv.innerHTML = "";
+  const searchSection = document.createElement("section");
+  searchSection.innerHTML = "<h2>Search Results</h2>";
+  
+  const row = document.createElement("div");
+  row.className = "movie-row";
 
   const filtered = data.results.filter(item => item.poster_path && (item.media_type === "movie" || item.media_type === "tv"));
   console.log("Filtered results:", filtered.length);
 
-  if (filtered.length === 0) {
-    searchContent.innerHTML = "<p class='placeholder'>No results with posters found</p>";
+  filtered.forEach(item => {
+    const card = createMovieCard(item, item.media_type);
+    if (card) row.appendChild(card);
+  });
+
+  if (row.children.length === 0) {
+    searchSection.innerHTML += "<p class='placeholder'>No results with posters found</p>";
   } else {
-    filtered.forEach(item => {
-      const card = createMovieCard(item, item.media_type);
-      if (card) searchContent.appendChild(card);
-    });
+    searchSection.appendChild(row);
   }
 
-  // Switch to search page immediately (no scrolling)
-  playerDiv.innerHTML = "";
-  switchPage("search");
+  playerDiv.appendChild(searchSection);
+  playerDiv.scrollIntoView({ behavior: 'smooth' });
 });
 
 // ---- Navigation ----
@@ -433,14 +439,7 @@ window.addEventListener("message", function(event) {
 
     if (!msg || msg.type !== "PLAYER_EVENT" || !msg.data) return;
 
-    const { currentTime, duration, id, mediaType, season, episode } = msg.data;
-    
-    // Track episode for TV shows
-    if (mediaType === "tv" && season && episode) {
-      console.log(`Show ${id}: S${season}E${episode}`);
-      saveShowEpisode(id, season, episode);
-    }
-    
+    const { currentTime, duration, id, mediaType } = msg.data;
     let entry = historyData.find(m => m.id === parseInt(id) && m.type === mediaType);
 
     if (!entry) {
@@ -455,10 +454,6 @@ window.addEventListener("message", function(event) {
     
     if (msg.data.event === "ended") {
       renderContinueWatching();
-      // Auto-advance to next episode for TV shows
-      if (mediaType === "tv" && season && episode) {
-        console.log("Episode ended, you can now watch the next one");
-      }
     }
   } catch (err) {
     // Ignore
@@ -468,7 +463,6 @@ window.addEventListener("message", function(event) {
 // ---- Initial Load ----
 loadHistory();
 loadWatchlist();
-loadShowEpisodes();
 fetchMovies("/movie/now_playing", "newMovies", "movie");
 fetchMovies("/movie/popular", "popularMovies", "movie");
 fetchMovies("/movie/top_rated", "topRatedMovies", "movie");

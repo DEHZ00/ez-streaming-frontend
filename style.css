@@ -165,20 +165,10 @@ header h1:hover {
 /* Pages */
 .page {
   display: none;
-  animation: fadeInPage 0.5s ease;
 }
 
 .page.active {
   display: block;
-}
-
-@keyframes fadeInPage {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 /* Sections */
@@ -224,12 +214,11 @@ h2 {
   transition: all 0.3s ease;
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .movie-card:hover {
-  transform: translateY(-8px) scale(1.08);
-  box-shadow: 0px 12px 24px rgba(102, 204, 255, 0.4);
+  transform: scale(1.08);
+  box-shadow: 0px 8px 20px rgba(102, 204, 255, 0.3);
 }
 
 .movie-card.selected {
@@ -293,17 +282,11 @@ h2 {
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 14px;
-  box-shadow: 0 4px 12px rgba(102, 204, 255, 0.3);
 }
 
 .play-btn:hover {
   background: #4da8cc;
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(102, 204, 255, 0.5);
-}
-
-.play-btn:active {
-  transform: scale(0.95);
+  transform: scale(1.05);
 }
 
 .card-buttons {
@@ -381,12 +364,6 @@ h2 {
   font-size: 18px;
 }
 
-.player-meta {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
 .player-type {
   font-size: 12px;
   background: #66ccff;
@@ -394,16 +371,6 @@ h2 {
   padding: 4px 12px;
   border-radius: 20px;
   font-weight: bold;
-}
-
-.episode-info {
-  font-size: 12px;
-  background: rgba(102, 204, 255, 0.2);
-  color: #66ccff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-weight: bold;
-  border: 1px solid #66ccff;
 }
 
 iframe {
