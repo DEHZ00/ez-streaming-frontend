@@ -67,16 +67,22 @@ async function apiCall(endpoint, params = {}) {
     const queryString = new URLSearchParams(params).toString();
     const url = `${BACKEND_URL}/api/tmdb${endpoint}${queryString ? "?" + queryString : ""}`;
     
+    console.log("API Call:", url);
+    
     const res = await fetch(url);
+    console.log("Response status:", res.status);
+    
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     
     const data = await res.json();
+    console.log("Response data:", data);
+    
     showLoading(false);
     return data;
   } catch (err) {
     console.error("API Error:", err);
     showLoading(false);
-    showError("Failed to load data. Please try again.");
+    showError("Failed to load data. Check console for details.");
     return null;
   }
 }
@@ -365,26 +371,33 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
     return;
   }
 
-  const data = await apiCall("/search/multi", { query: encodeURIComponent(query) });
+  console.log("Searching for:", query);
+  const data = await apiCall("/search/multi", { query });
+  
+  console.log("Search results:", data);
   
   if (!data || !data.results) {
+    console.warn("No results in response");
     playerDiv.innerHTML = "<p class='placeholder'>No results found</p>";
     return;
   }
 
+  console.log("Total results:", data.results.length);
+  
   playerDiv.innerHTML = "<h2>Search Results</h2>";
   const row = document.createElement("div");
   row.className = "movie-row";
 
-  data.results
-    .filter(item => item.poster_path && (item.media_type === "movie" || item.media_type === "tv"))
-    .forEach(item => {
-      const card = createMovieCard(item, item.media_type);
-      if (card) row.appendChild(card);
-    });
+  const filtered = data.results.filter(item => item.poster_path && (item.media_type === "movie" || item.media_type === "tv"));
+  console.log("Filtered results:", filtered.length);
+
+  filtered.forEach(item => {
+    const card = createMovieCard(item, item.media_type);
+    if (card) row.appendChild(card);
+  });
 
   if (row.children.length === 0) {
-    playerDiv.innerHTML = "<p class='placeholder'>No results found</p>";
+    playerDiv.innerHTML = "<p class='placeholder'>No results with posters found</p>";
   } else {
     playerDiv.appendChild(row);
   }
