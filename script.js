@@ -1,5 +1,5 @@
 // ⚙️ CONFIGURATION - UPDATE AFTER DEPLOYING BACKEND
-const BACKEND_URL = "https://ez-streaming-api.vercel.app"; // Replace with your Vercel URL
+const BACKEND_URL = "https://ez-streaming-api.vercel.app/"; // Replace with your Vercel URL
 // Example: "https://ez-streaming-api-g3k2m9.vercel.app"
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -110,7 +110,11 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
 // ---- Load Vidking Player ----
 function loadPlayer(id, type = "movie", title) {
   let entry = historyData.find(m => m.id === id && m.type === type);
-  let startTime = entry && entry.progress ? `&progress=${Math.floor(entry.progress)}` : "";
+  
+  // For TV shows, default to Season 1, Episode 1
+  const vidkingUrl = type === "tv" 
+    ? `https://www.vidking.net/embed/${type}/${id}/1/1?color=66ccff&autoPlay=true&nextEpisode=true&episodeSelector=true`
+    : `https://www.vidking.net/embed/${type}/${id}?color=66ccff&autoPlay=true`;
 
   playerDiv.innerHTML = `
     <div class="player-wrapper">
@@ -120,7 +124,7 @@ function loadPlayer(id, type = "movie", title) {
       </div>
       <iframe 
         id="vidking-iframe"
-        src="https://www.vidking.net/embed/${type}/${id}?color=66ccff&autoPlay=true${startTime}" 
+        src="${vidkingUrl}" 
         allowfullscreen
         allow="autoplay">
       </iframe>
@@ -144,7 +148,8 @@ function loadPlayer(id, type = "movie", title) {
   const checkInterval = setInterval(() => {
     checkCount++;
     try {
-      if (iframe && !iframe.src.includes(`/embed/${type}/${id}`)) {
+      const expectedPath = type === "tv" ? `/embed/${type}/${id}/1/1` : `/embed/${type}/${id}`;
+      if (iframe && !iframe.src.includes(expectedPath)) {
         clearInterval(checkInterval);
         iframe.style.display = 'none';
         document.getElementById('player-error').style.display = 'block';
