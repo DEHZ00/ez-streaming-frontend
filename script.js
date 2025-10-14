@@ -384,7 +384,11 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
 
   console.log("Total results:", data.results.length);
   
-  playerDiv.innerHTML = "<h2>Search Results</h2>";
+  // Create search results container
+  playerDiv.innerHTML = "";
+  const searchSection = document.createElement("section");
+  searchSection.innerHTML = "<h2>Search Results</h2>";
+  
   const row = document.createElement("div");
   row.className = "movie-row";
 
@@ -397,12 +401,13 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
   });
 
   if (row.children.length === 0) {
-    playerDiv.innerHTML = "<p class='placeholder'>No results with posters found</p>";
+    searchSection.innerHTML += "<p class='placeholder'>No results with posters found</p>";
   } else {
-    playerDiv.appendChild(row);
+    searchSection.appendChild(row);
   }
 
-  switchPage("home");
+  playerDiv.appendChild(searchSection);
+  playerDiv.scrollIntoView({ behavior: 'smooth' });
 });
 
 // ---- Navigation ----
