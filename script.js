@@ -1,5 +1,5 @@
 // ⚙️ CONFIGURATION - UPDATE AFTER DEPLOYING BACKEND
-const BACKEND_URL = "https://ez-streaming-api.vercel.app/"; // Replace with your Vercel URL
+const BACKEND_URL = "https://ez-streaming-api.vercel.app"; // Replace with your Vercel URL
 // Example: "https://ez-streaming-api-g3k2m9.vercel.app"
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
