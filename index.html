@@ -22,7 +22,6 @@
   <input type="text" id="searchBar" placeholder="Search movies or shows..." autocomplete="off">
   <nav class="nav-links">
     <button id="homeBtn" class="nav-btn active" data-page="home">Home</button>
-    <button id="searchBtn" class="nav-btn" data-page="search">Search Results</button>
     <button id="watchlistBtn" class="nav-btn" data-page="watchlist">My Watchlist</button>
     <button id="trendingBtn" class="nav-btn" data-page="trending">Trending</button>
   </nav>
@@ -73,16 +72,15 @@
   </section>
 </div>
 
-<!-- Trending Page -->
-<div id="trendingPage" class="page">
+<!-- Search Results Page -->
+<div id="searchPage" class="page">
   <section>
-    <h2>Trending This Week</h2>
-    <div id="trendingContent" class="movie-row"></div>
+    <h2>Search Results</h2>
+    <div id="searchContent" class="movie-row">
+      <p class="placeholder">Enter a search term to get started</p>
+    </div>
   </section>
 </div>
-
-<!-- Player -->
-<div id="player"></div>
 
 <!-- Movie Details Modal -->
 <div id="detailsModal" class="modal" style="display:none;">
