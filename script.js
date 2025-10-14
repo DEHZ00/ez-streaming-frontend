@@ -1,5 +1,5 @@
 // ⚙️ CONFIGURATION - UPDATE AFTER DEPLOYING BACKEND
-const BACKEND_URL = "https://ez-streaming-api-t23a.vercel.app/"; // Replace with your Vercel URL
+const BACKEND_URL = "https://ez-streaming-api.vercel.app/"; // Replace with your Vercel URL
 // Example: "https://ez-streaming-api-g3k2m9.vercel.app"
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
@@ -33,7 +33,7 @@ async function apiCall(endpoint, params = {}) {
   try {
     showLoading(true);
     const queryString = new URLSearchParams(params).toString();
-    const url = `/api/tmdb${endpoint}${queryString ? "?" + queryString : ""}`;
+    const url = `${BACKEND_URL}/api/tmdb${endpoint}${queryString ? "?" + queryString : ""}`;
     
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
