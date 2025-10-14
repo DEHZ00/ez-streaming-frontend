@@ -411,6 +411,10 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
 });
 
 // ---- Navigation ----
+document.getElementById("homeLink").addEventListener("click", () => {
+  switchPage("home");
+});
+
 document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const page = btn.dataset.page;

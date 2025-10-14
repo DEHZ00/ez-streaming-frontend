@@ -101,6 +101,12 @@ header h1 {
   font-size: 28px;
   color: #66ccff;
   font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+header h1:hover {
+  text-shadow: 0 0 20px rgba(102, 204, 255, 0.8);
+  transform: scale(1.05);
 }
 
 #searchBar {

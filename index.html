@@ -6,7 +6,7 @@
   <title>Ez Streaming</title>
   <link rel="stylesheet" href="style.css">
   <!-- Favicon - Movie camera emoji as icon -->
-<link rel="icon" type="image/png" href="https://r2.fivemanage.com/yhlF0A9ZrohxF6sKvC9qv/2023-05-0821_32_55-THEYKEEPGETTINGINMYHOUSE!_AlternateWatch-YouTube-Opera.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🎬</text></svg>">
 </head>
 <body>
 
@@ -17,11 +17,12 @@
 
 <header>
   <div class="header-left">
-    <h1>🎬 Ez Streaming</h1>
+    <h1 id="homeLink" style="cursor: pointer;">🎬 Ez Streaming</h1>
   </div>
   <input type="text" id="searchBar" placeholder="Search movies or shows..." autocomplete="off">
   <nav class="nav-links">
     <button id="homeBtn" class="nav-btn active" data-page="home">Home</button>
+    <button id="searchBtn" class="nav-btn" data-page="search">Search Results</button>
     <button id="watchlistBtn" class="nav-btn" data-page="watchlist">My Watchlist</button>
     <button id="trendingBtn" class="nav-btn" data-page="trending">Trending</button>
   </nav>
