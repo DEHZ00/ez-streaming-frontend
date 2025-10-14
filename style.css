@@ -200,7 +200,8 @@ h2 {
 
 /* Movie Card */
 .movie-card {
-  min-width: 150px;
+  min-width: 130px;
+  max-width: 130px;
   border-radius: 10px;
   overflow: hidden;
   background: #1c1c1c;
@@ -504,7 +505,8 @@ iframe {
   }
 
   .movie-card {
-    min-width: 120px;
+    min-width: 110px;
+    max-width: 110px;
   }
 
   section {

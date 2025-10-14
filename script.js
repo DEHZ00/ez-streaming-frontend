@@ -365,7 +365,7 @@ document.getElementById("searchBar").addEventListener("keyup", async (e) => {
     return;
   }
 
-  const data = await apiCall("/search/multi", { query });
+  const data = await apiCall("/search/multi", { query: encodeURIComponent(query) });
   
   if (!data || !data.results) {
     playerDiv.innerHTML = "<p class='placeholder'>No results found</p>";
