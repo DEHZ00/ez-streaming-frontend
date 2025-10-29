@@ -54,23 +54,23 @@
 
 <!-- PASSWORD BOX -->
 <div id="passwordContainer">
-  <h2>This page for ERICK ONLY 🤫</h2>
+  <h2> Only Erick</h2>
   <input type="password" id="erickPass" placeholder="Enter password">
   <button onclick="checkPass()">Enter</button>
 </div>
 
-<!-- PRIVATE CONTENT -->
+
 <div id="erickContent">
   <div class="erick-spin-wrapper">
     <img src="https://i.imgur.com/yOELkNo.jpeg" class="erick-spin" alt="Spinning Erick">
   </div>
 
-  <h1>What’s up Erick 😎</h1>
+  <h1>Hey Erick</h1>
   <img src="https://i.imgur.com/ququOgi.jpeg" width="300">
   <img src="https://i.imgur.com/aRYVJkj.jpeg" width="300">
 </div>
 
-<!-- YouTube Player Hidden -->
+<!-- YouTube Player -->
 <div id="player" style="width:0;height:0;overflow:hidden;"></div>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -105,7 +105,7 @@ function checkPass() {
     document.getElementById("erickContent").style.display = "block";
     document.querySelector(".erick-spin-wrapper").style.display = "block";
   } else {
-    alert("WRONG. You ain’t Erick ❌");
+    alert("WRONG");
     window.location.href = "index.html";
   }
 }
