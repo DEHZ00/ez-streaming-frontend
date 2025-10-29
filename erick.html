@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <div class="erick-spin-wrapper">
+    <img src="https://i.imgur.com/yOELkNo.jpeg" class="erick-spin" alt="Spinning Erick">
+
+</div>
+<audio id="erickTheme" autoplay loop>
+    <source src="https://YOUR-MUSIC-LINK-HERE.mp3" type="audio/mpeg">
+</audio>
+<script>
+document.addEventListener("click", () => {
+    const audio = document.getElementById("erickTheme");
+    if (audio.paused) {
+        audio.play().catch(() => {});
+    }
+}, { once: true });
+</script>
+<head>
+  <title>Erick Section</title>
+</head>
+<body>
+<div id="passwordContainer">
+  <h2>Private Area</h2>
+  <input type="password" id="erickPass" placeholder="Enter password">
+  <button onclick="checkPass()">Enter</button>
+</div>
+
+<div id="erickContent" style="display:none;">
+  <h1>Hi erick</h1>
+  <img src="https://i.imgur.com/ququOgi.jpeg">
+  <img src="https://i.imgur.com/aRYVJkj.jpeg">
+
+</div>
+
+<script>
+function checkPass() {
+  const pass = document.getElementById("erickPass").value;
+  if(pass === "3rick") {  
+    document.getElementById("passwordContainer").style.display = "none";
+    document.getElementById("erickContent").style.display = "block";
+  } else {
+    alert("Not erick.");
+    window.location.href = "index.html";
+  }
+}
+</script>
+
+</body>
+</html>

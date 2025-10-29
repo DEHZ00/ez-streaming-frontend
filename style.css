@@ -5,7 +5,8 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #3b0000, #5a0000, #8a0000);
+
   color: white;
   overflow-x: hidden;
 }
@@ -25,9 +26,32 @@ body {
   z-index: 9999;
 }
 
+/* Erick Spinning Face */
+.erick-spin-wrapper {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.erick-spin {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: spin 4s linear infinite;
+    object-fit: cover;
+    border: 4px solid red; 
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
 .spinner {
   border: 4px solid rgba(102, 204, 255, 0.2);
-  border-top: 4px solid #66ccff;
+  border-top: 4px solid #ff2c2c;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -42,7 +66,7 @@ body {
 .loading-spinner p {
   margin-top: 15px;
   font-size: 16px;
-  color: #66ccff;
+  color: #ff2c2c;
 }
 
 /* Error Message */
@@ -99,7 +123,7 @@ header {
 header h1 {
   margin: 0;
   font-size: 28px;
-  color: #66ccff;
+  color: #ff2c2c;
   font-weight: bold;
   transition: all 0.3s ease;
 }
@@ -112,7 +136,7 @@ header h1:hover {
 #searchBar {
   padding: 12px 16px;
   border-radius: 25px;
-  border: 2px solid #66ccff;
+  border: 2px solid #ff2c2c;
   background: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 14px;
@@ -153,13 +177,13 @@ header h1:hover {
 
 .nav-btn:hover {
   background: rgba(102, 204, 255, 0.2);
-  border-color: #66ccff;
+  border-color: #ff2c2c;
 }
 
 .nav-btn.active {
-  background: #66ccff;
+  background: #ff2c2c;
   color: #0f2027;
-  border-color: #66ccff;
+  border-color: #ff2c2c;
 }
 
 /* Pages */
@@ -178,7 +202,7 @@ section {
 
 h2 {
   margin: 0 0 15px 0;
-  color: #66ccff;
+  color: #ff2c2c;
   font-size: 22px;
 }
 
@@ -200,7 +224,7 @@ h2 {
 }
 
 .movie-row::-webkit-scrollbar-thumb {
-  background: #66ccff;
+  background: #ff2c2c;
   border-radius: 10px;
 }
 
@@ -223,7 +247,7 @@ h2 {
 
 .movie-card.selected {
   box-shadow: 0px 0px 20px rgba(102, 204, 255, 0.8);
-  border: 2px solid #66ccff;
+  border: 2px solid #ff2c2c;
 }
 
 .card-image-wrapper {
@@ -248,7 +272,7 @@ h2 {
   bottom: 0;
   left: 0;
   height: 4px;
-  background: #66ccff;
+  background: #ff2c2c;
   transition: width 0.3s ease;
 }
 
@@ -273,7 +297,7 @@ h2 {
 }
 
 .play-btn {
-  background: #66ccff;
+  background: #ff2c2c;
   color: #0f2027;
   border: none;
   padding: 12px 24px;
@@ -311,7 +335,7 @@ h2 {
 }
 
 .info-btn:hover {
-  background: #66ccff;
+  background: #ff2c2c;
   color: #0f2027;
 }
 
@@ -352,7 +376,7 @@ h2 {
 .player-header {
   padding: 15px 20px;
   background: rgba(0, 0, 0, 0.9);
-  border-bottom: 2px solid #66ccff;
+  border-bottom: 2px solid #ff2c2c#66ccff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -360,13 +384,13 @@ h2 {
 
 .player-header h3 {
   margin: 0;
-  color: #66ccff;
+  color: #ff2c2c;
   font-size: 18px;
 }
 
 .player-type {
   font-size: 12px;
-  background: #66ccff;
+  background: #ff2c2c;
   color: #0f2027;
   padding: 4px 12px;
   border-radius: 20px;
@@ -402,7 +426,7 @@ iframe {
   background-color: rgba(15, 32, 39, 0.95);
   margin: 5% auto;
   padding: 30px;
-  border: 1px solid #66ccff;
+  border: 1px solid #ff2c2c;
   border-radius: 12px;
   width: 90%;
   max-width: 600px;
@@ -412,7 +436,7 @@ iframe {
 }
 
 .close-btn {
-  color: #66ccff;
+  color: #ff2c2c;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -444,7 +468,7 @@ iframe {
 
 .details-info h2 {
   margin: 0 0 15px 0;
-  color: #66ccff;
+  color: #ff2c2c;
   font-size: 24px;
 }
 
@@ -460,7 +484,7 @@ iframe {
   padding: 8px 12px;
   border-radius: 5px;
   font-size: 12px;
-  border: 1px solid #66ccff;
+  border: 1px solid #ff2c2c;
 }
 
 .genres {
