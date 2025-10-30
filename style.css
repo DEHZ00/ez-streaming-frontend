@@ -561,4 +561,32 @@ iframe {
     margin: 20% auto;
     padding: 20px;
   }
+
+  .source-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.source-selector button {
+  background: #000000;
+  border: 1px solid #ffffff;
+  color: #853333;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.source-selector button:hover {
+  background: #333;
+}
+
+.source-selector button.active {
+  background: #752929;
+  color: #4a58da;
+  font-weight: 600;
+}
+
 }

@@ -202,11 +202,17 @@ window.onclick = (e) => {
 };
 
 // ---- Load Vidking Player ----
+// ---- Load Player with Source Selector ----
 function loadPlayer(id, type = "movie", title) {
-  // For TV shows, default to Season 1, Episode 1 with full features
-  const vidkingUrl = type === "tv" 
-    ? `https://www.vidking.net/embed/${type}/${id}/1/1?color=66ccff&autoPlay=true&nextEpisode=true&episodeSelector=true`
-    : `https://www.vidking.net/embed/${type}/${id}?color=66ccff&autoPlay=true`;
+  const vidkingUrl =
+    type === "tv"
+      ? `https://www.vidking.net/embed/${type}/${id}/1/1?color=66ccff&autoPlay=true&nextEpisode=true&episodeSelector=true`
+      : `https://www.vidking.net/embed/${type}/${id}?color=66ccff&autoPlay=true`;
+
+  const videasyUrl =
+    type === "tv"
+      ? `https://player.videasy.net/tv/${id}-1-1`
+      : `https://player.videasy.net/movie/${id}`;
 
   playerDiv.innerHTML = `
     <div class="player-wrapper">
@@ -214,49 +220,48 @@ function loadPlayer(id, type = "movie", title) {
         <h3>${title}</h3>
         <span class="player-type">${type === "tv" ? "TV Show" : "Movie"}</span>
       </div>
-      <iframe 
-        id="vidking-iframe"
-        src="${vidkingUrl}" 
+
+      <!-- -->
+      <div class="source-selector">
+        <button data-src="vidking" class="active">Vidking</button>
+        <button data-src="videasy">Videasy</button>
+      </div>
+
+      <iframe
+        id="stream-iframe"
+        src="${vidkingUrl}"
         allowfullscreen
         allow="autoplay"
-        referrerpolicy="no-referrer">
-      </iframe>
+        referrerpolicy="no-referrer"
+      ></iframe>
+
       <div id="player-error" style="display:none; padding:20px; text-align:center; color:#ff6b6b;">
-        <p>⚠️ This content is not available on Vidking</p>
-        <p style="font-size:12px; opacity:0.7;">Try searching for another title</p>
+        <p>⚠️ This content is not available on the selected source.</p>
+        <p style="font-size:12px; opacity:0.7;">Try switching sources above.</p>
       </div>
     </div>
   `;
 
   currentlyPlaying = { id, type, title };
 
-  let entry = historyData.find(m => m.id === id && m.type === type);
-  if (!entry) {
-    historyData.push({ id, type, progress: 0, duration: 0 });
-    saveHistory();
-  }
+  // ---- Source Switcher ----
+  const iframe = document.getElementById("stream-iframe");
+  document.querySelectorAll(".source-selector button").forEach(btn => {
+    btn.addEventListener("click", e => {
+      document.querySelectorAll(".source-selector button").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
 
-  // Error detection
-  const iframe = document.getElementById('vidking-iframe');
-  let checkCount = 0;
-  
-  const checkInterval = setInterval(() => {
-    checkCount++;
-    try {
-      const expectedPath = type === "tv" ? `/embed/${type}/${id}/1/1` : `/embed/${type}/${id}`;
-      if (iframe && !iframe.src.includes(expectedPath)) {
-        clearInterval(checkInterval);
-        iframe.style.display = 'none';
-        document.getElementById('player-error').style.display = 'block';
-      }
-    } catch (e) {
-      // Cross-origin restriction
-    }
-    
-    if (checkCount > 10) clearInterval(checkInterval);
-  }, 500);
+      const selected = e.target.dataset.src;
+      iframe.src = selected === "vidking" ? vidkingUrl : videasyUrl;
+    });
+  });
 
-  setTimeout(() => playerDiv.scrollIntoView({ behavior: 'smooth' }), 100);
+  // ----  Fallback ----
+  iframe.addEventListener("error", () => {
+    document.getElementById("player-error").style.display = "block";
+  });
+
+  setTimeout(() => playerDiv.scrollIntoView({ behavior: "smooth" }), 100);
 }
 
 // ---- Fetch Movies or TV ----
