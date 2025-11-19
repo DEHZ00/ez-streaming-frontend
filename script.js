@@ -66,17 +66,13 @@ async function apiCall(endpoint, params = {}) {
     showLoading(true);
     const queryString = new URLSearchParams(params).toString();
     const url = `${BACKEND_URL}/api/tmdb${endpoint}${queryString ? "?" + queryString : ""}`;
-    
+
     console.log("API Call:", url);
-    
+
     const res = await fetch(url);
-    console.log("Response status:", res.status);
-    
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
+
     const data = await res.json();
-    console.log("Response data:", data);
-    
     showLoading(false);
     return data;
   } catch (err) {
@@ -86,6 +82,7 @@ async function apiCall(endpoint, params = {}) {
     return null;
   }
 }
+
 
 // ---- Watchlist Management ----
 function toggleWatchlist(id, type, movie) {
