@@ -425,7 +425,6 @@ function renderSourcePills(media, defaultName, opts) {
 
 // Unified loadPlayer you call from cards
 function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
-  // Build canonical media object
   const media = {
     type,
     tmdbId: id,
@@ -434,6 +433,9 @@ function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
     anilistId: extraOpts.anilistId
   };
 
+  const lastProgress = getHistoryProgress(id, type, extraOpts.season, extraOpts.episode);
+
+
   // render player wrapper
   playerDiv.innerHTML = `
     <div class="player-wrapper">
@@ -441,6 +443,7 @@ function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
         <h3>${title || ""}</h3>
         <span class="player-type">${type === "tv" ? "TV Show" : (type === "anime" ? "Anime" : "Movie")}</span>
       </div>
+      <div id="player-season-dropdown"></div>
       <div id="player-tabs-placeholder"></div>
       <div id="player-iframe-placeholder" class="iframe-placeholder"></div>
       <div id="player-error" style="display:none; padding:14px; text-align:center; color:#ff6b6b;">
@@ -449,53 +452,49 @@ function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
     </div>
   `;
 
+  // render season dropdown for TV
+  if (type === "tv") {
+    renderSeasonsDropdown(id, media, extraOpts);
+  }
+
   // Build options object for provider mapping
   const opts = {
-  //design options
-  color: extraOpts.color || "#ffffff",
-  theme: extraOpts.theme || "#ffffff",
-
-  // Universal playback
-  autoplay: extraOpts.autoplay ?? true,
-  autoNext: extraOpts.autoNext ?? true,
-  autoplayNextEpisode: extraOpts.autoplayNextEpisode ?? true,
-  nextButton: extraOpts.nextButton ?? true,
-  episodeSelector: extraOpts.episodeSelector ?? true,
-
-  // UI + player controls
-  overlay: extraOpts.overlay ?? true,
-  dub: extraOpts.dub ?? true,
-  poster: extraOpts.poster ?? true,
-  title: extraOpts.title ?? true,
-  icons: extraOpts.icons ?? "true",
-  servericon: extraOpts.servericon ?? true,
-  chromecast: extraOpts.chromecast ?? true,
-  hideServerControls: extraOpts.hideServerControls ?? false,
-  fullscreenButton: extraOpts.fullscreenButton ?? true,
-
-  // Progress
-  progress: extraOpts.progress ?? 0,
-  startAt: extraOpts.startAt ?? 0,
-
-  // Provider-specific flexible parameters
-  server: extraOpts.server ?? undefined,
-  fontcolor: extraOpts.fontcolor ?? undefined,
-  fontsize: extraOpts.fontsize ?? undefined,
-  opacity: extraOpts.opacity ?? undefined
-};
+    color: extraOpts.color || "#ffffff",
+    theme: extraOpts.theme || "#ffffff",
+    autoplay: extraOpts.autoplay ?? true,
+    autoNext: extraOpts.autoNext ?? true,
+    autoplayNextEpisode: extraOpts.autoplayNextEpisode ?? true,
+    nextButton: extraOpts.nextButton ?? true,
+    episodeSelector: extraOpts.episodeSelector ?? true,
+    overlay: extraOpts.overlay ?? true,
+    dub: extraOpts.dub ?? true,
+    poster: extraOpts.poster ?? true,
+    title: extraOpts.title ?? true,
+    icons: extraOpts.icons ?? "true",
+    servericon: extraOpts.servericon ?? true,
+    chromecast: extraOpts.chromecast ?? true,
+    hideServerControls: extraOpts.hideServerControls ?? false,
+    fullscreenButton: extraOpts.fullscreenButton ?? true,
+    progress: extraOpts.progress ?? 0,
+    startAt: extraOpts.startAt ?? 0,
+    server: extraOpts.server ?? undefined,
+    fontcolor: extraOpts.fontcolor ?? undefined,
+    fontsize: extraOpts.fontsize ?? undefined,
+    progress: lastProgress ?? 0,
+    opacity: extraOpts.opacity ?? undefined
+  };
 
   // Render provider pills
   const tabs = renderSourcePills(media, DEFAULT_SOURCE, opts);
   document.getElementById("player-tabs-placeholder").appendChild(tabs);
 
-  // Auto-click default if present or first available
   const activeBtn = tabs.querySelector(".source-tab.active") || tabs.querySelector(".source-tab");
   if (activeBtn) activeBtn.click();
 
-  // Save currently playing
   currentlyPlaying = { id, type, title, media, opts };
   setTimeout(() => playerDiv.scrollIntoView({ behavior: "smooth" }), 80);
 }
+
 
 // ---- Fetch Movies or TV ----
 async function fetchMovies(endpoint, containerId, type = "movie") {
@@ -517,9 +516,106 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
       if (card) container.appendChild(card);
     });
 }
+//show function 
+async function renderSeasonsDropdown(tvId, media, extraOpts) {
+  const container = document.getElementById("player-season-dropdown");
+  container.innerHTML = "";
+
+  const tvData = await apiCall(`/tv/${tvId}`);
+  if (!tvData || !tvData.seasons) return;
+
+  const seasonSelect = document.createElement("select");
+  seasonSelect.className = "season-select";
+  seasonSelect.innerHTML = tvData.seasons
+    .map(s => `<option value="${s.season_number}">Season ${s.season_number} - ${s.name || ""}</option>`)
+    .join("");
+  container.appendChild(seasonSelect);
+
+  const episodeList = document.createElement("div");
+  episodeList.className = "episode-list";
+  container.appendChild(episodeList);
+
+  async function loadEpisodes(seasonNumber) {
+    const seasonData = await apiCall(`/tv/${tvId}/season/${seasonNumber}`);
+    episodeList.innerHTML = "";
+    if (!seasonData || !seasonData.episodes) return;
+
+    seasonData.episodes.forEach(ep => {
+      const epDiv = document.createElement("div");
+      epDiv.className = "episode-card";
+      epDiv.innerHTML = `
+        <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
+        <div class="episode-info">
+          <strong>${ep.episode_number}. ${ep.name}</strong>
+          <p>${ep.overview || ""}</p>
+        </div>
+      `;
+      seasonData.episodes.forEach(ep => {
+  const epDiv = document.createElement("div");
+  epDiv.className = "episode-card";
+
+  const epProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+  const resumeBadge = epProgress > 0 ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>` : "";
+
+  epDiv.innerHTML = `
+    <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
+    <div class="episode-info">
+      <strong>${ep.episode_number}. ${ep.name}</strong>
+      ${resumeBadge}
+      <p>${ep.overview || ""}</p>
+    </div>
+  `;
+
+
+
+  episodeList.appendChild(epDiv);
+});
+
+     epDiv.addEventListener("click", () => {
+  const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+  loadPlayer(tvId, "tv", media.title || media.name || "", {
+    ...extraOpts,
+    season: seasonNumber,
+    episode: ep.episode_number,
+    progress: lastProgress
+  });
+});
+episodeList.appendChild(epDiv);
+    }); 
+  }
+
+  // Initial load for first season
+  loadEpisodes(seasonSelect.value);
+
+  // On season change
+  seasonSelect.addEventListener("change", (e) => loadEpisodes(e.target.value));
+}
+
+function getHistoryProgress(tmdbId, type, season, episode) {
+  if (!historyData || !Array.isArray(historyData)) return 0;
+
+  //matching entry for TV shows or movies
+  const match = historyData.find(item => {
+    if (item.type !== type || item.tmdbId !== tmdbId) return false;
+    if (type === "tv") {
+      return item.season === season && item.episode === episode;
+    }
+    return true; // for movies
+  });
+
+  return match ? match.progress || 0 : 0;
+}
+
+function formatTime(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  return h > 0 ? `${h}:${m.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}` : `${m}:${sec.toString().padStart(2,"0")}`;
+}
+
 
 // ---- Render Continue Watching ----
-
+ 
 
 async function renderContinueWatching() {
   const container = document.getElementById('continueWatching');
