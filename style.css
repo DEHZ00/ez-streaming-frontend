@@ -647,3 +647,34 @@ iframe {
   background: #1c1c1c;
   color: #fff;
 }
+
+.episode-card {
+  width: 140px;       /* smaller width */
+  background: #1c1c1c;
+  color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+.episode-poster {
+  width: 100%;
+  height: 80px;       /* smaller poster */
+  object-fit: cover;
+}
+
+.episode-info {
+  padding: 6px 4px;
+}
+
+.episode-info p {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;    /* clamp to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
