@@ -522,34 +522,48 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
 }
 
 // ---- Render Continue Watching ----
-async function renderContinueWatching() {
-  continueDiv.innerHTML = "";
-
-  if (historyData.length === 0) {
-    continueDiv.innerHTML = `<p class="placeholder">You haven't watched anything yet. Start watching to see it here!</p>`;
-    return;
-  }
-
-  const watched = historyData.filter(item => item.progress > 0).sort((a, b) => b.addedAt - a.addedAt);
-  
-  if (watched.length === 0) {
-    continueDiv.innerHTML = `<p class="placeholder">You haven't watched anything yet. Start watching to see it here!</p>`;
-    return;
-  }
-
-  for (const item of watched.slice(0, 20)) {
+// Safe API call
+async function apiCall(url) {
+    if (!url) return null; // Skip if URL is falsy
     try {
-      const data = await apiCall(`/${item.type}/${item.id}`);
-      if (data) {
-        const card = createMovieCard(data, item.type);
-        if (card) continueDiv.appendChild(card);
-      }
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return await res.json();
     } catch (err) {
-      console.error("Failed to fetch history item:", err);
+        console.error("API Error:", err);
+        return null;
     }
-  }
 }
 
+// ---- Render Continue Watching ----
+async function renderContinueWatching() {
+  const container = document.getElementById('continueWatching');
+  if (!container) return;
+  container.innerHTML = ''; // Clear previous content
+
+  if (!historyData || historyData.length === 0) {
+    container.innerHTML = `<p class="placeholder">No movies to continue watching</p>`;
+    return;
+  }
+ 
+  const validEntries = historyData.filter(item => item && item.id);
+  if (validEntries.length === 0) {
+    container.innerHTML = `<p class="placeholder">No movies to continue watching</p>`;
+    return;
+  }
+
+
+  for (const entry of validEntries) {
+    const type = entry.type || "movie"; // default to movie
+    const movieId = entry.id;
+
+    const data = await apiCall(`/${type}/${movieId}`);
+    if (!data) continue; // skip failed fetches
+
+    const card = createMovieCard(data, type);
+    if (card) container.appendChild(card);
+  }
+}
 // ---- Render Watchlist Page ----
 async function renderWatchlist() {
   const container = document.getElementById("watchlistContent");
