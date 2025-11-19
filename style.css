@@ -648,33 +648,64 @@ iframe {
   color: #fff;
 }
 
+.episode-carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+  border: 1px solid rgba(255, 44, 44, 0.5);
+  border-radius: 8px;
+  scroll-behavior: smooth;
+}
+
+.episode-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.episode-carousel::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+}
+
+.episode-carousel::-webkit-scrollbar-thumb {
+  background: #ff2c2c;
+  border-radius: 6px;
+}
+
 .episode-card {
-  width: 140px;       /* smaller width */
-  background: #1c1c1c;
+  flex: 0 0 auto;
+  width: 140px;
+  background: #222;
   color: #fff;
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   transition: transform 0.2s;
+}
+
+.episode-card:hover {
+  transform: scale(1.05);
 }
 
 .episode-poster {
   width: 100%;
-  height: 80px;       /* smaller poster */
+  height: 80px;
   object-fit: cover;
+  display: block;
 }
 
 .episode-info {
   padding: 6px 4px;
 }
 
+
 .episode-info p {
+
   font-size: 0.75rem;
-  line-height: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;    /* clamp to 2 lines */
-  -webkit-box-orient: vertical;
+  color: #ccc;
+  line-height: 1.2em;
+  height: 2.4em; /* max 2 lines */
   overflow: hidden;
   text-overflow: ellipsis;
 }
