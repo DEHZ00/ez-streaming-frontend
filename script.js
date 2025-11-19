@@ -517,7 +517,8 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
     });
 }
 
-  // Show options
+ 
+ // ---- Render Seasons & Episodes Dropdown ----
 async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const container = document.getElementById("player-season-dropdown");
   container.innerHTML = "";
@@ -525,31 +526,19 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const tvData = await apiCall(`/tv/${tvId}`);
   if (!tvData || !tvData.seasons) return;
 
-  //season 0
+  
   const seasons = tvData.seasons.filter(s => s.season_number > 0);
   if (!seasons.length) return;
 
-  //  dropdown
-  async function renderSeasonsDropdown(tvId, media, extraOpts) {
-  const container = document.getElementById("player-season-dropdown");
-  container.innerHTML = "";
-
-  const tvData = await apiCall(`/tv/${tvId}`);
-  if (!tvData || !tvData.seasons) return;
-
-  const seasons = tvData.seasons.filter(s => s.season_number > 0);
-  if (!seasons.length) return;
-
-  // Create dropdown
+  // --- Create Season Dropdown ---
   const seasonSelect = document.createElement("select");
   seasonSelect.className = "season-select";
   seasonSelect.innerHTML = seasons
     .map(s => `<option value="${s.season_number}">Season ${s.season_number} - ${s.name || ""}</option>`)
     .join("");
-
   container.appendChild(seasonSelect);
 
-  // Create episode wrapper (scrollable row with arrows)
+  // --- Create Episode Row ---
   const wrapper = document.createElement("div");
   wrapper.className = "episode-row-wrapper";
 
@@ -567,24 +556,16 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   wrapper.appendChild(leftBtn);
   wrapper.appendChild(episodeList);
   wrapper.appendChild(rightBtn);
-
   container.appendChild(wrapper);
 
-  function scrollLeft() {
-    episodeList.scrollBy({ left: -300, behavior: "smooth" });
-  }
 
-  function scrollRight() {
-    episodeList.scrollBy({ left: 300, behavior: "smooth" });
-  }
+  leftBtn.addEventListener("click", () => episodeList.scrollBy({ left: -300, behavior: "smooth" }));
+  rightBtn.addEventListener("click", () => episodeList.scrollBy({ left: 300, behavior: "smooth" }));
 
-  leftBtn.addEventListener("click", scrollLeft);
-  rightBtn.addEventListener("click", scrollRight);
-
-  // Load episodes
+  // --- Load Episodes for a Season ---
   async function loadEpisodes(seasonNumber) {
     const seasonData = await apiCall(`/tv/${tvId}/season/${seasonNumber}`);
-    episodeList.innerHTML = ""; // only clear episodes, not dropdown or wrapper
+    episodeList.innerHTML = "";
     if (!seasonData || !seasonData.episodes) return;
 
     seasonData.episodes.forEach(ep => {
@@ -592,7 +573,9 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
       epDiv.className = "episode-card";
 
       const epProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-      const resumeBadge = epProgress > 0 ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>` : "";
+      const resumeBadge = epProgress > 0
+        ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>`
+        : "";
 
       epDiv.innerHTML = `
         <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
@@ -617,15 +600,13 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
     });
   }
 
-  // Listen for dropdown changes
-  seasonSelect.addEventListener("change", (e) => {
-    loadEpisodes(parseInt(e.target.value));
-  });
+  // Listen to dropdown changes
+  seasonSelect.addEventListener("change", (e) => loadEpisodes(parseInt(e.target.value)));
 
   // Load first season by default
   loadEpisodes(seasons[0].season_number);
 }
-}
+
 
 
 function getHistoryProgress(tmdbId, type, season, episode) {
