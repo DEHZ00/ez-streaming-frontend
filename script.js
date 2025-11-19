@@ -517,7 +517,8 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
     });
 }
 
- 
+  // Show options
+
  // ---- Render Seasons & Episodes Dropdown ----
 async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const container = document.getElementById("player-season-dropdown");
@@ -526,7 +527,7 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const tvData = await apiCall(`/tv/${tvId}`);
   if (!tvData || !tvData.seasons) return;
 
-  
+  // Filter out specials (season 0)
   const seasons = tvData.seasons.filter(s => s.season_number > 0);
   if (!seasons.length) return;
 
@@ -558,7 +559,7 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   wrapper.appendChild(rightBtn);
   container.appendChild(wrapper);
 
-
+  // Scroll functionality
   leftBtn.addEventListener("click", () => episodeList.scrollBy({ left: -300, behavior: "smooth" }));
   rightBtn.addEventListener("click", () => episodeList.scrollBy({ left: 300, behavior: "smooth" }));
 
