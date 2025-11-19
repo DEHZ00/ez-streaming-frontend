@@ -1,4 +1,4 @@
-// ⚙️ CONFIGURATION
+//CONFIGURATION
 const BACKEND_URL = "https://ez-streaming-api.vercel.app";
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
@@ -201,12 +201,12 @@ window.onclick = (e) => {
   }
 };
 
-// ----------------- MULTI-SOURCE PLAYER (final) -----------------
+// ----------------- MULTI-SOURCE PLAYER -----------------
 
-// Default source name (FluxLine -> VidPlus)
+
 let DEFAULT_SOURCE = "FluxLine";
 
-// Providers: mapping name->key and what each supports
+// Provider
 const PROVIDERS = [
   { name: "NovaReel",  key: "spenEmbed", supports: { movie: true, tv: true, anime: true } },
   { name: "FluxLine",  key: "vidplus",   supports: { movie: true, tv: true, anime: true } }, // default
@@ -215,7 +215,7 @@ const PROVIDERS = [
   { name: "Ez",        key: "videasy",   supports: { movie: true, tv: true, anime: true } }
 ];
 
-// Helper: build a query string from an object, skipping undefined/null
+
 function buildQuery(params) {
   const qs = Object.entries(params || {})
     .filter(([k, v]) => v !== undefined && v !== null && v !== "")
@@ -224,16 +224,14 @@ function buildQuery(params) {
   return qs ? `?${qs}` : "";
 }
 
-// For each provider we map features -> query param names and build the URL.
+
 function buildProviderUrl(providerKey, media, opts = {}) {
-  // media: { type: "movie"|"tv"|"anime", tmdbId, season, episode, anilistId }
-  // opts: generic options you pass like color/theme, progress/startAt, autoplay, nextEpisode, episodeSelector, autoplayNextEpisode, overlay, dub, server, etc.
+  
   const t = media.type;
   const id = media.tmdbId || media.id || (media.anilistId && t === "anime" ? media.anilistId : "");
   if (!id) return "";
 
-  // Normalize common option names to provider-specific names
-  // We'll create a params object per provider and then build query
+
   if (providerKey === "spenEmbed") {
     // spencerdevs.xyz: supports theme
     let base = "";
@@ -246,7 +244,7 @@ function buildProviderUrl(providerKey, media, opts = {}) {
   }
 
   if (providerKey === "vidplus") {
-    // player.vidplus.to supports many params; use their naming
+    // player.vidplus.to 
     let base = "";
     if (t === "movie") base = `https://player.vidplus.to/embed/movie/${id}`;
     if (t === "tv") base = `https://player.vidplus.to/embed/tv/${id}/${media.season || 1}/${media.episode || 1}`;
@@ -274,7 +272,7 @@ function buildProviderUrl(providerKey, media, opts = {}) {
   }
 
   if (providerKey === "vidfast") {
-    // vidfast.pro supports server, autoPlay, startAt, theme, nextButton, autoNext, etc.
+    // vidfast.pro 
     const baseDomain = "https://vidfast.pro";
     let base = "";
     if (t === "movie") base = `${baseDomain}/movie/${id}`;
@@ -429,7 +427,6 @@ function renderSourcePills(media, defaultName, opts) {
 }
 
 // Unified loadPlayer you call from cards
-// extraOpts is an object that can contain provider-agnostic keys: color, theme, progress/startAt, autoplay, nextEpisode, episodeSelector, autoplayNextEpisode, overlay, dub, server, etc.
 function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
   // Build canonical media object
   const media = {
@@ -456,9 +453,8 @@ function loadPlayer(id, type = "movie", title = "", extraOpts = {}) {
   `;
 
   // Build options object for provider mapping
-  // We'll accept both `progress` or `startAt`; normalize to both where supported.
   const opts = {
-  // Universal design options
+  //design options
   color: extraOpts.color || "#ffffff",
   theme: extraOpts.theme || "#ffffff",
 
