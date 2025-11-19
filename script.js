@@ -582,32 +582,27 @@ if (extraOpts.season) {
         ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>`
         : "";
 
-  // Check if this episode is currently playing
-  const isPlaying = extraOpts.episode === ep.episode_number && extraOpts.season === seasonNumber;
-  if (isPlaying) epDiv.classList.add("playing-episode");
+      epDiv.innerHTML = `
+        <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
+        <div class="episode-info">
+          <strong>${ep.episode_number}. ${ep.name}</strong>
+          ${resumeBadge}
+          <p>${ep.overview || ""}</p>
+        </div>
+      `;
 
-  epDiv.innerHTML = `
-    <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
-    <div class="episode-info">
-      <strong>${ep.episode_number}. ${ep.name}</strong>
-      ${resumeBadge}
-      <p>${ep.overview || ""}</p>
-    </div>
-  `;
+      epDiv.addEventListener("click", () => {
+        const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+        loadPlayer(tvId, "tv", media.title || media.name || "", {
+          ...extraOpts,
+          season: seasonNumber,
+          episode: ep.episode_number,
+          progress: lastProgress
+        });
+      });
 
-  epDiv.addEventListener("click", () => {
-    const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-    loadPlayer(tvId, "tv", media.title || media.name || "", {
-      ...extraOpts,
-      season: seasonNumber,
-      episode: ep.episode_number,
-      progress: lastProgress
+      episodeList.appendChild(epDiv);
     });
-  });
-
-  episodeList.appendChild(epDiv);
-});
-     
   }
 
   // Listen to dropdown changes
