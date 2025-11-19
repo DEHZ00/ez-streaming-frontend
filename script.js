@@ -625,23 +625,22 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   // Load first season by default
   loadEpisodes(seasons[0].season_number);
 }
-
+}
 
 
 function getHistoryProgress(tmdbId, type, season, episode) {
   if (!historyData || !Array.isArray(historyData)) return 0;
 
-  //matching entry for TV shows or movies
   const match = historyData.find(item => {
     if (item.type !== type || item.tmdbId !== tmdbId) return false;
     if (type === "tv") {
       return item.season === season && item.episode === episode;
     }
-    return true; // for movies
+    return true;
   });
-}
   return match ? match.progress || 0 : 0;
 }
+
 
 function formatTime(s) {
   const h = Math.floor(s / 3600);
