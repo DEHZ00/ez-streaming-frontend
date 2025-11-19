@@ -563,44 +563,69 @@ iframe {
   }
 /* source player */
 
- /* Source Selector (for player switching) */
-.source-selector {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px 0;
-  background: rgba(0, 0, 0, 0.8);
-  border-bottom: 2px solid #ff2c2c;
+
+
+/* responsive tweaks */
+@media (max-width: 640px) {
+  .source-tab { padding: 6px 10px; font-size: 12px; }
+  iframe { height: 420px; }
 }
 
-.source-selector button {
-  background: rgba(255, 255, 255, 0.1);
+
+
+
+}
+
+/* Tabs reset + pill style (cross-browser) */
+.source-tabs-bar, .source-tabs-scroll, .source-tab {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.source-tabs-bar {
+  display: block;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.35);
+  border-bottom: 1px solid rgba(255,44,44,0.06);
+}
+
+.source-tabs-scroll {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.source-tabs-scroll::-webkit-scrollbar { height:8px; }
+.source-tabs-scroll::-webkit-scrollbar-thumb { background: rgba(255,44,44,0.2); border-radius:8px; }
+
+.source-tab {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.04);
   color: #fff;
-  border: 2px solid transparent;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  white-space: nowrap;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
 }
 
-.source-selector button:hover {
-  background: rgba(255, 44, 44, 0.2);
+.source-tab:hover, .source-tab:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  background: rgba(255,255,255,0.07);
+  outline: none;
+}
+
+.source-tab.active {
+  background: linear-gradient(90deg,#ff2c2c,#ff6b6b);
+  color: #081117;
   border-color: #ff2c2c;
-}
-
-.source-selector button.active {
-  background: linear-gradient(90deg, #ff2c2c, #ff6b6b);
-  color: #0f2027;
-  border-color: #ff2c2c;
-  box-shadow: 0 0 15px rgba(255, 44, 44, 0.6);
-  transform: scale(1.05);
-}
-
-
-
-
-
-
+  box-shadow: 0 8px 28px rgba(255,44,44,0.2);
+  transform: translateY(-3px) scale(1.02);
 }
