@@ -519,20 +519,8 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
 }
 
 // ---- Render Continue Watching ----
-// Safe API call
-async function apiCall(url) {
-    if (!url) return null; // Skip if URL is falsy
-    try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return await res.json();
-    } catch (err) {
-        console.error("API Error:", err);
-        return null;
-    }
-}
 
-// ---- Render Continue Watching ----
+
 async function renderContinueWatching() {
   const container = document.getElementById('continueWatching');
   if (!container) return;
