@@ -516,7 +516,8 @@ async function fetchMovies(endpoint, containerId, type = "movie") {
       if (card) container.appendChild(card);
     });
 }
-//show function 
+
+  // Show options
 async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const container = document.getElementById("player-season-dropdown");
   container.innerHTML = "";
@@ -524,19 +525,11 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const tvData = await apiCall(`/tv/${tvId}`);
   if (!tvData || !tvData.seasons) return;
 
-  // Season selector
-async function renderSeasonsDropdown(tvId, media, extraOpts) {
-  const container = document.getElementById("player-season-dropdown");
-  container.innerHTML = "";
-
-  const tvData = await apiCall(`/tv/${tvId}`);
-  if (!tvData || !tvData.seasons) return;
-
-  // Filter out season 0
+  //season 0
   const seasons = tvData.seasons.filter(s => s.season_number > 0);
   if (!seasons.length) return;
 
-  // Create dropdown
+  //  dropdown
   const seasonSelect = document.createElement("select");
   seasonSelect.className = "season-select";
   seasonSelect.innerHTML = seasons
@@ -544,22 +537,22 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
     .join("");
   container.appendChild(seasonSelect);
 
-  // Episode list container
+  // Episode list
   const episodeList = document.createElement("div");
   episodeList.className = "episode-list";
   container.appendChild(episodeList);
 
-  // Load episodes for the first season
+  
   const firstSeason = seasons[0].season_number;
   loadEpisodes(firstSeason);
 
-  // Listen for dropdown changes
+
   seasonSelect.addEventListener("change", async (e) => {
     const seasonNumber = parseInt(e.target.value);
     loadEpisodes(seasonNumber);
   });
 
-  // Function to load episodes
+  //load episodes
   async function loadEpisodes(seasonNumber) {
     const seasonData = await apiCall(`/tv/${tvId}/season/${seasonNumber}`);
     episodeList.innerHTML = "";
@@ -612,7 +605,7 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
     wrapper.appendChild(rightBtn);
 
     container.innerHTML = "";
-    container.appendChild(seasonSelect); // keep dropdown visible
+    container.appendChild(seasonSelect); 
     container.appendChild(wrapper);
   }
 }
@@ -626,7 +619,7 @@ seasonSelect.addEventListener("change", async (e) => {
   renderEpisodesRow(seasonData, tvId, e.target.value, media, extraOpts);
 });
 
-}
+
 
 
 function getHistoryProgress(tmdbId, type, season, episode) {
