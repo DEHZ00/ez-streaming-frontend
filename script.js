@@ -567,54 +567,55 @@ if (extraOpts.season) {
   leftBtn.addEventListener("click", () => episodeList.scrollBy({ left: -300, behavior: "smooth" }));
   rightBtn.addEventListener("click", () => episodeList.scrollBy({ left: 300, behavior: "smooth" }));
 
-  // --- Load Episodes for a Season ---
-  async function loadEpisodes(seasonNumber) {
-    const seasonData = await apiCall(`/tv/${tvId}/season/${seasonNumber}`);
-    episodeList.innerHTML = "";
-    if (!seasonData || !seasonData.episodes) return;
+// --- Load Episodes for a Season ---
+async function loadEpisodes(seasonNumber) {
+  const seasonData = await apiCall(`/tv/${tvId}/season/${seasonNumber}`);
+  episodeList.innerHTML = "";
+  if (!seasonData || !seasonData.episodes) return;
 
-    seasonData.episodes.forEach(ep => {
-      const epDiv = document.createElement("div");
-      epDiv.className = "episode-card";
+  seasonData.episodes.forEach(ep => {
+    const epDiv = document.createElement("div");
+    epDiv.className = "episode-card";
 
-      const epProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-      const resumeBadge = epProgress > 0
-        ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>`
-        : "";
+    const epProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+    const resumeBadge = epProgress > 0
+      ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>`
+      : "";
 
-  // Check if this episode is currently playing
-  const isPlaying = extraOpts.episode === ep.episode_number && extraOpts.season === seasonNumber;
-  if (isPlaying) epDiv.classList.add("playing-episode");
+    // Highlight current playing episode
+    const isCurrentPlaying = currentlyPlaying &&
+      currentlyPlaying.media.type === "tv" &&
+      currentlyPlaying.media.tmdbId === tvId &&
+      currentlyPlaying.media.season === seasonNumber &&
+      currentlyPlaying.media.episode === ep.episode_number;
 
-  epDiv.innerHTML = `
-    <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
-    <div class="episode-info">
-      <strong>${ep.episode_number}. ${ep.name}</strong>
-      ${resumeBadge}
-      <p>${ep.overview || ""}</p>
-    </div>
-  `;
+    epDiv.innerHTML = `
+      <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
+      <div class="episode-info ${isCurrentPlaying ? "current-playing" : ""}">
+        <strong>${ep.episode_number}. ${ep.name}</strong>
+        ${resumeBadge}
+        <p>${ep.overview || ""}</p>
+      </div>
+    `;
 
-  epDiv.addEventListener("click", () => {
-    const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-    loadPlayer(tvId, "tv", media.title || media.name || "", {
-      ...extraOpts,
-      season: seasonNumber,
-      episode: ep.episode_number,
-      progress: lastProgress
+    epDiv.addEventListener("click", () => {
+      const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+      loadPlayer(tvId, "tv", media.title || media.name || "", {
+        ...extraOpts,
+        season: seasonNumber,
+        episode: ep.episode_number,
+        progress: lastProgress
+      });
     });
+
+    episodeList.appendChild(epDiv);
   });
+}
 
-  episodeList.appendChild(epDiv);
-});
-     
-  }
-
-  // Listen to dropdown changes
-  seasonSelect.addEventListener("change", (e) => loadEpisodes(parseInt(e.target.value)));
-
-  // Load first season by default
-  loadEpisodes(seasons[0].season_number);
+// --- Set initial season ---
+const initialSeason = extraOpts.season || seasons[0].season_number;
+seasonSelect.value = initialSeason;
+loadEpisodes(initialSeason);
 }
 
 
