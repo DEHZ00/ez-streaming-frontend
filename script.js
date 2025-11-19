@@ -527,9 +527,11 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   // Season selector
   const seasonSelect = document.createElement("select");
   seasonSelect.className = "season-select";
-  seasonSelect.innerHTML = tvData.seasons
-    .map(s => `<option value="${s.season_number}">Season ${s.season_number} - ${s.name || ""}</option>`)
-    .join("");
+ seasonSelect.innerHTML = tvData.seasons
+  .filter(s => s.season_number > 0) // skip season 0
+  .map(s => `<option value="${s.season_number}">Season ${s.season_number} - ${s.name || ""}</option>`)
+  .join("");
+
   container.appendChild(seasonSelect);
 
   const episodeList = document.createElement("div");

@@ -643,11 +643,10 @@ iframe {
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 8px 0;
-  margin: 0;
 }
 
 .episode-list::-webkit-scrollbar {
-  display: none; /* hide scrollbar */
+  display: none;
 }
 
 .episode-card {
@@ -657,7 +656,7 @@ iframe {
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-align: center;
   transition: transform 0.2s;
 }
@@ -676,11 +675,22 @@ iframe {
   padding: 4px 6px;
 }
 
-.resume-badge {
+.episode-info p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* max 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 2px 0 0 0;
   font-size: 0.7rem;
+  color: #ccc;
+}
+
+.resume-badge {
+  font-size: 0.65rem;
   color: #ffcc00;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 /* Arrow buttons */
@@ -692,9 +702,9 @@ iframe {
   background: rgba(0,0,0,0.6);
   border: none;
   color: #fff;
-  font-size: 1.5rem;
-  width: 36px;
-  height: 60px;
+  font-size: 1.3rem;
+  width: 28px;
+  height: 50px;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -706,3 +716,4 @@ iframe {
 .scroll-btn.right {
   right: 0;
 }
+
