@@ -524,6 +524,7 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
   const tvData = await apiCall(`/tv/${tvId}`);
   if (!tvData || !tvData.seasons) return;
 
+  // Season selector
   const seasonSelect = document.createElement("select");
   seasonSelect.className = "season-select";
   seasonSelect.innerHTML = tvData.seasons
@@ -543,53 +544,39 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
     seasonData.episodes.forEach(ep => {
       const epDiv = document.createElement("div");
       epDiv.className = "episode-card";
+
+      const epProgress = getHistoryProgress(tvId, "tv", parseInt(seasonNumber), ep.episode_number);
+      const resumeBadge = epProgress > 0 ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>` : "";
+
       epDiv.innerHTML = `
         <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
         <div class="episode-info">
           <strong>${ep.episode_number}. ${ep.name}</strong>
+          ${resumeBadge}
           <p>${ep.overview || ""}</p>
         </div>
       `;
-      seasonData.episodes.forEach(ep => {
-  const epDiv = document.createElement("div");
-  epDiv.className = "episode-card";
 
-  const epProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-  const resumeBadge = epProgress > 0 ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>` : "";
+      epDiv.addEventListener("click", () => {
+        loadPlayer(tvId, "tv", media.title || media.name || "", {
+          ...extraOpts,
+          season: parseInt(seasonNumber),
+          episode: ep.episode_number,
+          progress: epProgress
+        });
+      });
 
-  epDiv.innerHTML = `
-    <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
-    <div class="episode-info">
-      <strong>${ep.episode_number}. ${ep.name}</strong>
-      ${resumeBadge}
-      <p>${ep.overview || ""}</p>
-    </div>
-  `;
-
-
-
-  episodeList.appendChild(epDiv);
-});
-
-     epDiv.addEventListener("click", () => {
-  const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-  loadPlayer(tvId, "tv", media.title || media.name || "", {
-    ...extraOpts,
-    season: seasonNumber,
-    episode: ep.episode_number,
-    progress: lastProgress
-  });
-});
-episodeList.appendChild(epDiv);
-    }); 
+      episodeList.appendChild(epDiv);
+    });
   }
 
-  // Initial load for first season
+  // Load first season by default
   loadEpisodes(seasonSelect.value);
 
   // On season change
-  seasonSelect.addEventListener("change", (e) => loadEpisodes(e.target.value));
+  seasonSelect.addEventListener("change", e => loadEpisodes(e.target.value));
 }
+
 
 function getHistoryProgress(tmdbId, type, season, episode) {
   if (!historyData || !Array.isArray(historyData)) return 0;
