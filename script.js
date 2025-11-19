@@ -538,6 +538,10 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
     .map(s => `<option value="${s.season_number}">Season ${s.season_number} - ${s.name || ""}</option>`)
     .join("");
   container.appendChild(seasonSelect);
+// Set the dropdown to the season currently playing
+if (extraOpts.season) {
+  seasonSelect.value = extraOpts.season;
+}
 
   // --- Create Episode Row ---
   const wrapper = document.createElement("div");
@@ -578,27 +582,32 @@ async function renderSeasonsDropdown(tvId, media, extraOpts) {
         ? `<span class="resume-badge">Resume at ${formatTime(epProgress)}</span>`
         : "";
 
-      epDiv.innerHTML = `
-        <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
-        <div class="episode-info">
-          <strong>${ep.episode_number}. ${ep.name}</strong>
-          ${resumeBadge}
-          <p>${ep.overview || ""}</p>
-        </div>
-      `;
+  // Check if this episode is currently playing
+  const isPlaying = extraOpts.episode === ep.episode_number && extraOpts.season === seasonNumber;
+  if (isPlaying) epDiv.classList.add("playing-episode");
 
-      epDiv.addEventListener("click", () => {
-        const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
-        loadPlayer(tvId, "tv", media.title || media.name || "", {
-          ...extraOpts,
-          season: seasonNumber,
-          episode: ep.episode_number,
-          progress: lastProgress
-        });
-      });
+  epDiv.innerHTML = `
+    <img src="${ep.still_path ? IMG_BASE + ep.still_path : ""}" alt="${ep.name}" class="episode-poster">
+    <div class="episode-info">
+      <strong>${ep.episode_number}. ${ep.name}</strong>
+      ${resumeBadge}
+      <p>${ep.overview || ""}</p>
+    </div>
+  `;
 
-      episodeList.appendChild(epDiv);
+  epDiv.addEventListener("click", () => {
+    const lastProgress = getHistoryProgress(tvId, "tv", seasonNumber, ep.episode_number);
+    loadPlayer(tvId, "tv", media.title || media.name || "", {
+      ...extraOpts,
+      season: seasonNumber,
+      episode: ep.episode_number,
+      progress: lastProgress
     });
+  });
+
+  episodeList.appendChild(epDiv);
+});
+     
   }
 
   // Listen to dropdown changes

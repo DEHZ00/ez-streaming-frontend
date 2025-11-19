@@ -724,3 +724,7 @@ iframe {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.playing-episode {
+  border: 2px solid #ff2c2c;
+  box-shadow: 0 0 8px #ff2c2c;
+}
