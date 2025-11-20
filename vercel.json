@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://cinerealm.online/$1",
+      "permanent": true
+    }
+  ]
+}
